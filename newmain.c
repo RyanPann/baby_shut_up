@@ -137,8 +137,41 @@ int blue[15][8]={
 }; 
 
 
+int orange[7][8]={
+                   {0,0,60,66,66,60,0,126},
+                   {0,60,66,66,60,0,126,26},
+                   {60,66,66,60,0,126,26,42},
+                   {66,66,60,0,126,26,42,68},
+                   {66,60,0,126,26,42,68,0},
+                   {60,0,126,26,42,68,0,124},
+                   {0,126,26,42,68,0,124,10},
+};
+
+int orange1[7][8] = {
+                   {126,26,42,68,0,124,10,10},
+                   {26,42,68,0,124,10,10,124},
+                   {42,68,0,124,10,10,124,0},
+                   {68,0,124,10,10,124,0,124},
+                   {0,124,10,10,124,0,124,8},
+                   {124,10,10,124,0,124,8,16},
+                   {10,10,124,0,124,8,16,32},
+                  /* {10,124,0,124,8,16,32,124},
+                   {124,0,124,8,16,32,124,0},
+                   {0,124,8,16,32,124,0,60},
+                   {124,8,16,32,124,0,60,66},
+                   {8,16,32,124,0,60,66,72},
+                   {16,32,124,0,60,66,72,72},
+                   {32,124,0,60,66,72,72,56},
+                   {124,0,60,66,72,72,56,0},
+                   {0,60,66,72,72,56,0,126},
+                   {60,66,72,72,56,0,126,74},
+                   {66,72,72,56,0,126,74,74},
+                   {72,72,56,0,126,74,74,74},
+                   {0,0,0,0,0,0,0,0}*/
+};
+
+
 void main(void) {
-    
     //TRISA: set RA0~7 as output
     TRISAbits.RA0= 0;
     TRISAbits.RA1= 0;
@@ -160,10 +193,13 @@ void main(void) {
     //TRISB: set RB as input
     TRISBbits.RB5 = 1;
     TRISCbits.RC3 = 1;
-    TRISEbits.RE1 = 1;
+    TRISCbits.RC7 = 1;
+    TRISCbits.RC6 = 1;
+    
     PORTBbits.RB5 = 1;
     PORTCbits.RC3 = 1;
-    PORTEbits.RE1 = 1;
+    PORTCbits.RC7 = 1;
+    PORTCbits.RC6 = 1;
     
 
     int my[8][8]={{128,192,128,0,0,0,0,0},
@@ -175,16 +211,17 @@ void main(void) {
                   {0,0,0,0,0,0,0,0},
                   {0,0,0,0,0,0,0,0}};
     
+    
     int count=0;
     int bb;
     while(1)
     {
         if(RB5 == 0){ //red button pushed
             for(count=0;count<10;count++){
-                for(k=0;k<8;k++){
+                for(k=0;k<10;k++){
                     for(i=0;i<8;i++){
-                        if(RC3 == 0 || RE1 == 0)
-                            break;
+                        if(RC3 == 0 || RC7 == 0 || RC6 == 0)
+                            break; 
                         LATA=~j;
                         LATD=red[count][i];
                         __delay_ms(25);
@@ -196,11 +233,11 @@ void main(void) {
             }
             //j=1;
         }
-        else if(RC3 == 0){ //blue button pushed
+        else if(RC3 == 0){ //yellow button pushed
             for(count=0;count<28;count++){
-                for(k=0;k<8;k++){
+                for(k=0;k<10;k++){
                     for(i=0;i<8;i++){
-                        if(RB5 == 0 || RE1 == 0)
+                        if(RB5 == 0 || RC7 == 0 || RC6 == 0)
                             break;
                         LATA=~j;
                         LATD=yellow[count][i];
@@ -213,11 +250,11 @@ void main(void) {
             }
             //j=1;
         }
-        else if(RE1 == 0){ //yellow button pushed
-            for(count=0;count<28;count++){
-                for(k=0;k<8;k++){
+        else if(PORTCbits.RC7 == 0){ //blue button pushed
+            for(count=0;count<15;count++){
+                for(k=0;k<10;k++){
                     for(i=0;i<8;i++){
-                        if(RB5 == 0 || RC3 == 0)
+                        if(RB5 == 0 || RC3 == 0 || RC6 == 0)
                             break;
                         LATA=~j;
                         LATD=blue[count][i];
@@ -229,6 +266,39 @@ void main(void) {
                 //j=1;
             }
             //j=1;
+        }
+        else if(PORTCbits.RC6 == 0){ //orange button pushed
+            for(count=0;count<7;count++){
+                for(k=0;k<10;k++){
+                    for(i=0;i<8;i++){
+                        if(RB5 == 0 || RC3 == 0 || RC7 == 0)
+                            break;
+                        LATA=~j;
+                        LATD=orange[count][i];
+                        //LATD=orange1[count][i];
+                        __delay_ms(25);
+                        j=j<<1;
+                    }
+                j=1;
+                }
+                //j=1;
+            }
+            for(count=0;count<7;count++){
+                for(k=0;k<10;k++){
+                    for(i=0;i<8;i++){
+                        if(RB5 == 0 || RC3 == 0 || RC7 == 0)
+                            break;
+                        LATA=~j;
+                        LATD=orange1[count][i];
+                        __delay_ms(25);
+                        j=j<<1;
+                    }
+                j=1;
+                }
+                //j=1;
+            }
+            
+
         }
         
      
